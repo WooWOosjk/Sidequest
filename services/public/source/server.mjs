@@ -7,6 +7,8 @@ import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
 import { scramjetPath } from "@mercuryworkshop/scramjet/path";
 import { epoxyPath } from "@mercuryworkshop/epoxy-transport";
 import { baremuxPath } from "@mercuryworkshop/bare-mux/node";
+import { createAiLimiter } from "./ai-limits.mjs";
+const aiLimiter = createAiLimiter();
 const host = process.env.HOST || "127.0.0.1",
   password = process.env.SERVICE_PASSWORD;
 if (!["127.0.0.1", "localhost", "::1"].includes(host) && !password)
@@ -32,8 +34,7 @@ function sameOrigin(req) {
     return false;
   }
 }
-// Only the Movies/TV page, its shared assets, and read-only media APIs are public.
-// Exact paths avoid granting anonymous access to AI, proxy assets, or source routes.
+// Exact public paths; proxy assets, status and source routes retain authentication.
 const publicMediaAssets = new Set([
   "/media.html", "/styles.css", "/gamer.css", "/services.css",
   "/common.js", "/blank.js", "/services-config.js", "/services.js",
@@ -61,6 +62,7 @@ Object.assign(wisp.options, {
 logging.set_level(logging.NONE);
 const app = Fastify({
   bodyLimit: 40000,
+  trustProxy: false,
   serverFactory: (handler) =>
     createServer(handler).on("upgrade", (req, socket, head) => {
       if (req.url === "/wisp/" && authorized(req) && sameOrigin(req))
@@ -73,15 +75,40 @@ app.addHook("onRequest", async (req, res) => {
   const read = req.method === "GET" || req.method === "HEAD";
   const mediaApi = publicMediaApis.has(path) && (read || req.method === "OPTIONS");
   const publicMedia = mediaApi || (read && publicMediaAssets.has(path));
-  if (!publicMedia && !authorized(req.raw))
+  const aiPath = path === "/api/ai";
+  const aiApi = aiPath && ["POST", "OPTIONS"].includes(req.method);
+  const aiPage = read && path === "/ai.html";
+  if (aiPath && !aiApi)
+    return res.header("Allow", "POST, OPTIONS").code(405).send({ error: "Use POST with JSON." });
+  if (!publicMedia && !aiApi && !aiPage && !authorized(req.raw))
     return res
       .header("WWW-Authenticate", 'Basic realm="Sidequest services"')
       .code(401)
       .send("Sign in to use this service.");
   const origin = req.headers.origin;
+  if (aiApi) {
+    res.header("Cache-Control", "no-store").header("Vary", "Origin");
+    if (!origin || !mediaOriginAllowed(req.raw))
+      return res.code(403).send({ error: "Request origin is not allowed." });
+    res.header("Access-Control-Allow-Origin", origin);
+    if (req.method === "OPTIONS") {
+      const headers = String(req.headers["access-control-request-headers"] || "")
+        .split(",").map(value => value.trim().toLowerCase()).filter(Boolean);
+      if (req.headers["access-control-request-method"] !== "POST" || headers.some(value => value !== "content-type"))
+        return res.code(403).send({ error: "Request is not allowed." });
+      return res.header("Access-Control-Allow-Methods", "POST")
+        .header("Access-Control-Allow-Headers", "Content-Type").code(204).send();
+    }
+    if (!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(req.headers["content-type"] || ""))
+      return res.code(415).send({ error: "Send application/json." });
+    const budget = aiLimiter.take(req.ip);
+    if (!budget.allowed)
+      return res.header("Retry-After", String(budget.retryAfter)).code(429)
+        .send({ error: "AI request limit reached. Try again later." });
+  }
   if (mediaApi && !mediaOriginAllowed(req.raw))
     return res.code(403).send({ error: "Request origin is not allowed." });
-  if (!mediaApi && req.url.startsWith("/api/") && !sameOrigin(req.raw))
+  if (!mediaApi && !aiApi && req.url.startsWith("/api/") && !sameOrigin(req.raw))
     return res.code(403).send({ error: "Request origin is not allowed." });
   if (mediaApi) {
     res.header("Vary", "Origin");
@@ -136,20 +163,28 @@ app.get("/api/status", async () => ({
   media: !!process.env.TMDB_TOKEN,
   proxy: true,
 }));
-app.post("/api/ai", async (req, res) => {
-  if (!rate(req, "ai", 8))
-    return res
-      .code(429)
-      .send({ error: "Wait a minute before sending more messages." });
+app.post("/api/ai", {
+  bodyLimit: 8192,
+  errorHandler(error, _req, res) {
+    if (error.code === "FST_ERR_CTP_BODY_TOO_LARGE")
+      return res.code(413).send({ error: "Request body exceeds 8 KiB." });
+    return res.code(error.statusCode === 400 ? 400 : 500)
+      .send({ error: "The AI request could not be processed." });
+  },
+}, async (req, res) => {
   if (!process.env.GROQ_API_KEY)
     return res
       .code(503)
       .send({ error: "AI needs GROQ_API_KEY on the service server." });
   const text = req.body?.message;
-  if (typeof text !== "string" || !text.trim() || text.length > 8000)
+  if (!req.body || Array.isArray(req.body) || Object.keys(req.body).length !== 1 ||
+      typeof text !== "string" || !text.trim() || text.length > 2000)
     return res
       .code(400)
-      .send({ error: "Enter a message of 1–8000 characters." });
+      .send({ error: "Send only a message string of 1–2000 characters." });
+  if (!aiLimiter.enter())
+    return res.header("Retry-After", "5").code(429)
+      .send({ error: "AI is busy. Try again shortly." });
   try {
     const model = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
     if (!/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,127}$/.test(model)) throw Error("Invalid model");
@@ -179,15 +214,16 @@ app.post("/api/ai", async (req, res) => {
         });
     const data = await r.json();
     const content = data.choices?.[0]?.message?.content;
-    return {
-      text: typeof content === "string" && content
-        ? content.replaceAll(process.env.GROQ_API_KEY, "[redacted]")
-        : "No response was returned.",
-    };
+    let reply = typeof content === "string" && content ? content : "No response was returned.";
+    for (const secret of [process.env.GROQ_API_KEY, process.env.SERVICE_USER, process.env.SERVICE_PASSWORD, process.env.TMDB_TOKEN].filter(Boolean))
+      reply = reply.replaceAll(secret, "[redacted]");
+    return { text: reply };
   } catch {
     return res
       .code(502)
       .send({ error: "The AI service is unavailable. Try again later." });
+  } finally {
+    aiLimiter.leave();
   }
 });
 app.get("/api/media", async (req, res) => {
@@ -282,6 +318,7 @@ app.get("/api/player", async (req, res) => {
 });
 app.options("/api/media", async (_req, res) => res.code(204).send());
 app.options("/api/player", async (_req, res) => res.code(204).send());
+app.options("/api/ai", async (_req, res) => res.code(204).send());
 app.setNotFoundHandler((req, res) =>
   res.code(404).send({ error: "Page not found." }),
 );

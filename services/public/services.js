@@ -77,6 +77,7 @@
       try {
         const data = await api("/api/ai", {
           method: "POST",
+          credentials: "omit",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: text }),
         });

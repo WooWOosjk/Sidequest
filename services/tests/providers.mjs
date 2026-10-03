@@ -14,6 +14,8 @@ globalThis.fetch = async (url, options) => {
       return Response.json({error: {message: 'Sensitive provider detail fixture-groq'}}, {status: 401});
     if (body.messages[0].content === 'provider-throws') throw Error('Sensitive exception fixture-groq');
     if (body.messages[0].content === 'provider-invalid-json') return new Response('invalid');
+    if (body.messages[0].content === 'slow-reply') await new Promise(resolve => setTimeout(resolve, 300));
+    if (body.messages[0].content === 'echo-secrets') return Response.json({choices: [{message: {content: 'fixture-user fixture-password fixture-tmdb fixture-groq'}}]});
     if (body.messages[0].content === 'empty-reply') return Response.json({choices: []});
     if (body.messages[0].content === 'echo-key') return Response.json({choices: [{message: {content: 'fixture-groq'}}]});
     return Response.json({choices: [{message: {content: 'Fixture reply <script>window.injected=1</script>', reasoning: 'Not a public reply'}}]});

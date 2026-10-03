@@ -36,7 +36,7 @@
         url.search = "";
         url.hash = "";
         const target = new URL(kind + ".html", url).href;
-        if (kind === "media") {
+        if (kind === "media" || kind === "ai") {
           if (target === location.href)
             throw Error("The services page needs its sameOrigin configuration.");
           location.replace(target);
@@ -83,6 +83,7 @@
       try {
         const data = await api("/api/ai", {
           method: "POST",
+          credentials: "omit",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message: text }),
         });

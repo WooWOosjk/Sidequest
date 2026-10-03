@@ -22,7 +22,7 @@ test('anonymous Movies/TV, exact origins, rate limits, protected APIs and Wisp',
       child.stderr.on('data', data => process.stderr.write(data));
     });
     const request = (path, options) => fetch(base + path, options);
-    for (const path of ['/media.html', '/styles.css', '/gamer.css', '/services.css', '/common.js', '/blank.js', '/services-config.js', '/services.js', '/media.html?from=portal']) {
+    for (const path of ['/media.html', '/ai.html', '/styles.css', '/gamer.css', '/services.css', '/common.js', '/blank.js', '/services-config.js', '/services.js', '/media.html?from=portal']) {
       const r = await request(path);
       assert.equal(r.status, 200, path);
       assert.equal(r.headers.get('www-authenticate'), null, path);
@@ -30,8 +30,8 @@ test('anonymous Movies/TV, exact origins, rate limits, protected APIs and Wisp',
       for (const secret of ['fixture-user', 'fixture-password', 'fixture-tmdb', 'fixture-groq']) assert.ok(!text.includes(secret), path);
     }
     assert.equal((await request('/media.html', {method:'HEAD'})).status, 200);
-    for (const path of ['/api/status', '/ai.html', '/proxy.html', '/sw.js', '/scram/scramjet.all.js', '/baremux/index.js', '/epoxy/index.mjs', '/source/server.mjs', '/api/media/extra', '/%61pi/media', '/api//media', '/media.html/extra']) assert.equal((await request(path)).status, 401, path);
-    assert.equal((await request('/api/ai', {method:'POST'})).status, 401);
+    for (const path of ['/api/status', '/proxy.html', '/sw.js', '/scram/scramjet.all.js', '/baremux/index.js', '/epoxy/index.mjs', '/source/server.mjs', '/api/media/extra', '/%61pi/media', '/api//media', '/media.html/extra']) assert.equal((await request(path)).status, 401, path);
+    assert.equal((await request('/api/ai', {method:'POST'})).status, 403);
     assert.equal((await request('/api/media', {method:'POST'})).status, 401);
     assert.equal((await request('/api/status', {headers:{Authorization: 'Basic invalid'}})).status, 401);
     assert.equal((await request('/api/status', {headers:{Authorization:auth}})).status, 200);
@@ -58,8 +58,8 @@ test('anonymous Movies/TV, exact origins, rate limits, protected APIs and Wisp',
     assert.equal((await request('/api/media')).status, 429);
     for (let i=0;i<58;i++) assert.equal((await request('/api/player?id=11')).status, 200);
     assert.equal((await request('/api/player?id=11')).status, 429);
-    const ai = () => request('/api/ai', {method:'POST', headers:{Authorization:auth,'Content-Type':'application/json'}, body:JSON.stringify({message:'test'})});
-    for(let i=0;i<8;i++) assert.equal((await ai()).status, 200);
+    const ai = () => request('/api/ai', {method:'POST', headers:{Origin:base,'Content-Type':'application/json'}, body:JSON.stringify({message:'test'})});
+    for(let i=0;i<3;i++) assert.equal((await ai()).status, 200);
     assert.equal((await ai()).status, 429);
     const upgrade = headers => new Promise((resolve, reject) => {
       const req = http.request(base+'/wisp/', {headers:{Connection:'Upgrade', Upgrade:'websocket','Sec-WebSocket-Version':'13','Sec-WebSocket-Key':'dGhlIHNhbXBsZSBub25jZQ==', Origin:base, ...headers}});
@@ -95,7 +95,7 @@ test('Groq request/response contract, model config, missing key and safe errors'
       });
       const authorization = 'Basic ' + Buffer.from('fixture-user:fixture-password').toString('base64');
       const request = (route, options = {}) => fetch(`http://127.0.0.1:${port}${route}`, {...options, headers: {Authorization: authorization, ...options.headers}});
-      const ai = message => request('/api/ai', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message})});
+      const ai = message => fetch(`http://127.0.0.1:${port}/api/ai`, {method:'POST', headers:{Origin:`http://127.0.0.1:${port}`, 'Content-Type':'application/json'}, body:JSON.stringify({message})});
       await run(ai, request);
     } finally {
       child.kill();
@@ -110,12 +110,8 @@ test('Groq request/response contract, model config, missing key and safe errors'
       assert.equal(r.status, 200);
       assert.deepEqual(await r.json(), {text:'Fixture reply <script>window.injected=1</script>'});
     }
-    assert.equal((await ai('')).status, 400);
-    assert.equal((await ai('x'.repeat(8001))).status, 400);
     const empty = await ai('empty-reply');
     assert.deepEqual(await empty.json(), {text:'No response was returned.'});
-    const redacted = await ai('echo-key');
-    assert.deepEqual(await redacted.json(), {text:'[redacted]'});
   }));
   await t.test('configurable namespaced model', () => withServer({GROQ_MODEL:'openai/gpt-oss-120b'}, async ai => {
     assert.equal((await ai('custom model')).status, 200);

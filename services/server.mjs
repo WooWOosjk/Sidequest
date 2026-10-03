@@ -32,6 +32,23 @@ function sameOrigin(req) {
     return false;
   }
 }
+// Only the Movies/TV page, its shared assets, and read-only media APIs are public.
+// Exact paths avoid granting anonymous access to AI, proxy assets, or source routes.
+const publicMediaAssets = new Set([
+  "/media.html", "/styles.css", "/gamer.css", "/services.css",
+  "/common.js", "/blank.js", "/services-config.js", "/services.js",
+]);
+const publicMediaApis = new Set(["/api/media", "/api/player"]);
+const mediaFrontendOrigin = "https://sidequest-browser-arcade.friedsocrates.chatgpt.site";
+function mediaOriginAllowed(req) {
+  const origin = req.headers.origin;
+  if (!origin || origin === mediaFrontendOrigin) return true;
+  if (origin === "https://" + req.headers.host) return true;
+  // HTTP is accepted only for local development, not a production downgrade.
+  return ["localhost", "127.0.0.1", "[::1]"].some(
+    (name) => req.headers.host === name || req.headers.host?.startsWith(name + ":"),
+  ) && origin === "http://" + req.headers.host;
+}
 Object.assign(wisp.options, {
   allow_udp_streams: false,
   allow_private_ips: false,
@@ -52,13 +69,27 @@ const app = Fastify({
     }),
 });
 app.addHook("onRequest", async (req, res) => {
-  if (!authorized(req.raw))
+  const path = req.url.split("?", 1)[0];
+  const read = req.method === "GET" || req.method === "HEAD";
+  const mediaApi = publicMediaApis.has(path) && (read || req.method === "OPTIONS");
+  const publicMedia = mediaApi || (read && publicMediaAssets.has(path));
+  if (!publicMedia && !authorized(req.raw))
     return res
       .header("WWW-Authenticate", 'Basic realm="Sidequest services"')
       .code(401)
       .send("Sign in to use this service.");
-  if (req.url.startsWith("/api/") && !sameOrigin(req.raw))
+  const origin = req.headers.origin;
+  if (mediaApi && !mediaOriginAllowed(req.raw))
     return res.code(403).send({ error: "Request origin is not allowed." });
+  if (!mediaApi && req.url.startsWith("/api/") && !sameOrigin(req.raw))
+    return res.code(403).send({ error: "Request origin is not allowed." });
+  if (mediaApi) {
+    res.header("Vary", "Origin");
+    if (origin) res.header("Access-Control-Allow-Origin", origin);
+    // Public metadata never needs browser credentials or authorization headers.
+    if (req.method === "OPTIONS")
+      return res.header("Access-Control-Allow-Methods", "GET, HEAD").code(204).send();
+  }
   res.header("X-Content-Type-Options", "nosniff");
   if (
     req.url.startsWith("/proxy.html") ||
@@ -208,6 +239,8 @@ app.get("/api/media", async (req, res) => {
   }
 });
 app.get("/api/player", async (req, res) => {
+  if (!rate(req, "player", 60))
+    return res.code(429).send({ error: "Too many player requests. Try again in a minute." });
   const kind = req.query.kind === "tv" ? "tv" : "movie",
     id = String(req.query.id || ""),
     season = String(req.query.season || "1"),
@@ -246,6 +279,8 @@ app.get("/api/player", async (req, res) => {
       });
   }
 });
+app.options("/api/media", async (_req, res) => res.code(204).send());
+app.options("/api/player", async (_req, res) => res.code(204).send());
 app.setNotFoundHandler((req, res) =>
   res.code(404).send({ error: "Page not found." }),
 );

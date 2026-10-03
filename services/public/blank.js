@@ -7,7 +7,7 @@ document.querySelectorAll('[data-open-blank]').forEach(button=>button.addEventLi
   doc.documentElement.lang='en';
   doc.body.style.cssText='margin:0;background:#14111d;overflow:hidden';
   const frame=doc.createElement('iframe');
-  frame.src=new URL('index.html',location.href).href;
+  frame.src=document.body.dataset.service==='media' ? location.href : new URL('index.html',location.href).href;
   frame.title='Sidequest';
   frame.style.cssText='display:block;width:100vw;height:100vh;border:0';
   frame.allow='fullscreen; clipboard-write';

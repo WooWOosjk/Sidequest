@@ -1,0 +1,15 @@
+
+ABOUT:BLANK
+Use the Open in about:blank button in the top bar. Allow pop-ups if prompted.
+The new tab embeds this site; about:blank itself isn't a reusable share link.
+This was tested using Chromium file URLs, not a physical Chromebook.
+
+
+CHAT
+Native Firebase chat replaces the old embedded room.
+To turn it on, follow docs/CHAT-SETUP.md. A Firebase project and backend deployment are required.
+For Chromebook chat, use the hosted HTTPS site. The games still work from START.html.
+
+ADDITIONS
+696 game/tool entries. Games still open from START.html; many need internet.
+Movies & TV, AI and Browser require services/ deployment. See docs/SERVICES-SETUP.md.

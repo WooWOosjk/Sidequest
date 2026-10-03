@@ -1,0 +1,290 @@
+# Additional collection import
+
+Imported from the user-supplied Downloads folders on October 3, 2026. The user confirmed redistribution permission for both collections. No remote game packages were scraped or mirrored.
+
+Original library: 424 entries. Added: 272 (66 local games/tools and 206 external Schplay links). Total: 696 (475 local, 221 external). Six additions are static tools: Music Player, Ruffle, RIOT, Soundboard, EmulatorJS, and Code Editor.
+
+Compared catalog names after normalizing spelling, punctuation, common aliases, version labels, and alternate collection titles. Existing entries and IDs were preserved. Additional playable entry pages found outside s0lace’s catalog were included where distinct. Schplay supplied catalog pages but no game binaries or thumbnails, so its additions link to original game pages and use the original remote thumbnail URL with the existing fallback behavior. Link checks returned HTTP 200; this does not establish that every remote game runs.
+
+Source notices are preserved under website/imports/s0lace/. The AGPL license and original README are included. Root-relative app paths were adjusted where matching supplied dependencies exist. The oversized Bike Obby WASM file is split into 8 MiB pieces and reconstructed into its original bytes in the browser; its loader uses the reconstructed code URL. Other original game logic remains as supplied. These apps can require internet, HTTP hosting, or external CDN services; a local HTML entry does not guarantee offline play.
+
+Source server-based AI, media and proxy architecture is implemented in the isolated services/ folder; read SERVICES-SETUP.md. The frontend links those services without installing a proxy worker on the main site. Existing Web and Firebase Chat were preserved.
+
+## Added entries
+
+- Sandtris — s0lace / local / Puzzle
+- Five Nights at Freddy's: UCN — s0lace / local / Horror
+- Riddle School — s0lace / local / Puzzle
+- Riddle School 2 — s0lace / local / Puzzle
+- Riddle School 3 — s0lace / local / Puzzle
+- Riddle School 4 — s0lace / local / Puzzle
+- Riddle School 5 — s0lace / local / Puzzle
+- Retro Highway — s0lace / local / Driving
+- Survival Race — s0lace / local / Driving
+- WorldBox — s0lace / local / Arcade
+- Snowbattle.io — s0lace / local / Arcade
+- CGFC 25 — s0lace / local / Arcade
+- Coreball — s0lace / local / Arcade
+- Doblox — s0lace / local / Arcade
+- Nico's Nextbots — s0lace / local / Arcade
+- Soccer Bros — s0lace / local / Sports
+- Super Mario Bros — s0lace / local / Platformer
+- Drive Mad — s0lace / local / Driving
+- Fake Clash Royal — s0lace / local / Arcade
+- Plants VS Brainrots — s0lace / local / Arcade
+- Space Wave — s0lace / local / Arcade
+- A Small World Cup! — s0lace / local / Arcade
+- Traffic Jam 3D — s0lace / local / Driving
+- Free Rider — s0lace / local / Sports
+- Smash Karts — s0lace / local / Arcade
+- Undertale Yellow — s0lace / local / Arcade
+- Deadly Descent — s0lace / local / Arcade
+- Cluster Rush — s0lace / local / Arcade
+- Hill Climb Racer Lite — s0lace / local / Driving
+- Eaglecraft 1.7.3 — s0lace / local / Arcade
+- Steal A Brainrot — s0lace / local / Arcade
+- Harvest Simulator — s0lace / local / Simulation
+- Mr Bullet — s0lace / local / Arcade
+- We Become What We Behold — s0lace / local / Arcade
+- Escape Road 2 — s0lace / local / Arcade
+- Dadish — s0lace / local / Platformer
+- Dadish 2 — s0lace / local / Platformer
+- Dadish 3 — s0lace / local / Platformer
+- Moto X3M — s0lace / local / Driving
+- Moto X3M 2 — s0lace / local / Driving
+- Vex — s0lace / local / Platformer
+- Vex 2 — s0lace / local / Platformer
+- Moto X3M 3 — s0lace / local / Driving
+- Moto X3M Pool Party — s0lace / local / Driving
+- Moto X3M Spooky Land — s0lace / local / Driving
+- Moto X3M Winter — s0lace / local / Driving
+- Sonic The Hedgehog — s0lace / local / Platformer
+- Sonic Rush — s0lace / local / Platformer
+- Sonic & Knuckles — s0lace / local / Platformer
+- Sandbox City — s0lace / local / Arcade
+- Sandboxels — s0lace / local / Arcade
+- Tunnel Rush — s0lace / local / Arcade
+- Bike Obby — s0lace / local / Driving
+- Deep Freeze — schplay / external / Arcade
+- Doge Miner — schplay / external / Simulation
+- EvoWars — schplay / external / Arcade
+- There Is No Game — schplay / external / Arcade
+- Bit Gun Io — schplay / external / Action
+- Find the Alien — schplay / external / Arcade
+- Magic Tiles 3 — schplay / external / Arcade
+- Shovel 3D — schplay / external / Arcade
+- BuildNow GG — schplay / external / Arcade
+- Man Runner 2048 — schplay / external / Puzzle
+- Stickman and Guns — schplay / external / Action
+- Duck Life 3 — schplay / external / Platformer
+- Duck Life 5 — schplay / external / Platformer
+- Duck Hunt — schplay / external / Action
+- Duck Life 2 — schplay / external / Platformer
+- Dune Buggy — schplay / external / Driving
+- Electric Man 2 — schplay / external / Arcade
+- Fireboy and Watergirl Fire Temple — schplay / external / Arcade
+- Flappy 2048 — schplay / external / Puzzle
+- Bad Time Simulator — schplay / external / Simulation
+- Baldi's Basics Plus — schplay / external / Horror
+- Bejeweled 2 — schplay / external / Puzzle
+- Cat Mario — schplay / external / Platformer
+- Civiballs 1 — schplay / external / Puzzle
+- Curveball — schplay / external / Arcade
+- Adastra — schplay / external / Arcade
+- Antbuster — schplay / external / Arcade
+- Arcade Wizard — schplay / external / Arcade
+- Bad Ice Cream 1 — schplay / external / Arcade
+- Bad Ice Cream 2 — schplay / external / Arcade
+- Bad Ice Cream 3 — schplay / external / Arcade
+- Agar.io — schplay / external / Arcade
+- Angry Birds Halloween — schplay / external / Arcade
+- Ace Gangster — schplay / external / Arcade
+- 10 Minutes Till Dawn — schplay / external / Arcade
+- Slope 2 — schplay / external / Arcade
+- Learn To Fly — schplay / external / Arcade
+- Learn To Fly 2 — schplay / external / Arcade
+- House Of Hazards — schplay / external / Arcade
+- Tank Trouble — schplay / external / Action
+- Draw The Hill — schplay / external / Arcade
+- Rooftop Sniper — schplay / external / Action
+- Hide & Smash — schplay / external / Arcade
+- Mr Mine — schplay / external / Arcade
+- Run 2 — schplay / external / Arcade
+- Spend Elon's Money — schplay / external / Simulation
+- Mine Sweeper — schplay / external / Arcade
+- Google Snake — schplay / external / Arcade
+- DBZ Devolution — schplay / external / Arcade
+- Papa's Games — schplay / external / Arcade
+- Stickman Games — schplay / external / Arcade
+- Vex's Games — schplay / external / Platformer
+- 2048 — schplay / external / Puzzle
+- MotoX3M Games — schplay / external / Driving
+- CSGO Case Opener — schplay / external / Arcade
+- Stickman Golf — schplay / external / Sports
+- Pandemic 2 — schplay / external / Arcade
+- Riddle School Games — schplay / external / Puzzle
+- Cupcake 2048 — schplay / external / Puzzle
+- Duck Life 1 — schplay / external / Platformer
+- Galaga — schplay / external / Arcade
+- Gravity Guy — schplay / external / Arcade
+- Gyroball — schplay / external / Arcade
+- Idle Shark — schplay / external / Simulation
+- Marippy — schplay / external / Arcade
+- Minecraft Tower Defense — schplay / external / Arcade
+- Minecraft Tower Defense 2 — schplay / external / Arcade
+- Motherload — schplay / external / Arcade
+- N Gon — schplay / external / Arcade
+- Oiligarchy — schplay / external / Arcade
+- Pacman — schplay / external / Arcade
+- Pacxon — schplay / external / Arcade
+- Quake III Arena — schplay / external / Arcade
+- Pool — schplay / external / Sports
+- Pregnancy Test — schplay / external / Arcade
+- Shuffle — schplay / external / Arcade
+- Slither.io — schplay / external / Arcade
+- Snailiad — schplay / external / Platformer
+- Snake — schplay / external / Arcade
+- Snowline — schplay / external / Arcade
+- Steal This Election — schplay / external / Arcade
+- Supersonic — schplay / external / Platformer
+- Super Mario 63 — schplay / external / Platformer
+- Swords and Sandals 2 — schplay / external / Arcade
+- Tetris — schplay / external / Puzzle
+- The Big Adventure of Owata's Life — schplay / external / Platformer
+- Tower Blaster — schplay / external / Arcade
+- Tower Master — schplay / external / Arcade
+- Undertale: Rejuvenation Mod — schplay / external / Arcade
+- Last Breath Trio Mod — schplay / external / Arcade
+- The Final Experiment Mod — schplay / external / Arcade
+- 2048 Merge Run — schplay / external / Puzzle
+- Build a Big Army — schplay / external / Action
+- Build a Plane — schplay / external / Arcade
+- Camouflage and Sniper — schplay / external / Action
+- Car Survival 3D — schplay / external / Driving
+- City Defense — schplay / external / Arcade
+- Clothing Shop 3D — schplay / external / Simulation
+- Cool Cars Run 3D — schplay / external / Arcade
+- Crush Cars 3D — schplay / external / Arcade
+- Destiny Run 3D — schplay / external / Arcade
+- Destroy the Car 3D — schplay / external / Driving
+- Diamond Seeker — schplay / external / Arcade
+- Draw Joust — schplay / external / Arcade
+- Evolving Bombs 3D — schplay / external / Arcade
+- Fire and Frost Master — schplay / external / Arcade
+- Fitness Empire — schplay / external / Simulation
+- Flick Goal — schplay / external / Sports
+- Flip Master — schplay / external / Arcade
+- Giant Wanted — schplay / external / Arcade
+- Gun Clone — schplay / external / Action
+- Gun Runner — schplay / external / Action
+- High Heels — schplay / external / Arcade
+- Kaji Run — schplay / external / Arcade
+- Make a Superboat — schplay / external / Arcade
+- Makeover Run — schplay / external / Arcade
+- Mega Car Jumps — schplay / external / Driving
+- Money Rush — schplay / external / Simulation
+- Monster Box 3D — schplay / external / Arcade
+- Office Fight — schplay / external / Arcade
+- Robot Invasion — schplay / external / Action
+- Run Rich 3D — schplay / external / Arcade
+- Save P Diddy from Prison — schplay / external / Arcade
+- Seat Jam 3D — schplay / external / Arcade
+- Shooting Master — schplay / external / Action
+- Supermarket 3D — schplay / external / Arcade
+- Survive to Victory — schplay / external / Arcade
+- Telekinesis Attack — schplay / external / Arcade
+- Telekinesis Car — schplay / external / Arcade
+- Telekinesis Drive — schplay / external / Driving
+- Telekinesis — schplay / external / Arcade
+- Triple Match 3D — schplay / external / Arcade
+- Tug of War with Cars — schplay / external / Action
+- Twisted Rope 3D — schplay / external / Arcade
+- Wall Crawler — schplay / external / Arcade
+- War Regions — schplay / external / Action
+- Weapon Craft Run — schplay / external / Action
+- Weapon Upgrade Rush — schplay / external / Action
+- Wheel Scale — schplay / external / Arcade
+- Starpoly — schplay / external / Arcade
+- Bus School Park Driver — schplay / external / Driving
+- Real Driving Simulator — schplay / external / Driving
+- Air Slip — schplay / external / Arcade
+- The Last Shot — schplay / external / Arcade
+- Mouse Raider — schplay / external / Arcade
+- PixelCraft Animal School — schplay / external / Arcade
+- Arrow Fest 3D Online — schplay / external / Arcade
+- We Bare Bears Difference — schplay / external / Puzzle
+- Little Princess Jigsaw — schplay / external / Puzzle
+- Hotel Transylvania Coloring Book — schplay / external / Arcade
+- Escape Mystic Castle Mobile version — schplay / external / Arcade
+- Jump Over Alphabets — schplay / external / Arcade
+- Jelly Matches — schplay / external / Arcade
+- Paperly: Paper Plane Adventure — schplay / external / Arcade
+- Bridge Wars — schplay / external / Arcade
+- Super Tank Hero — schplay / external / Action
+- Hide And Seek Blue Monster — schplay / external / Arcade
+- Math games for Dummies — schplay / external / Puzzle
+- Fall Guy 2024 — schplay / external / Arcade
+- 2D Car Driving: Drive Safe — schplay / external / Driving
+- Circle Of Heroes — schplay / external / Arcade
+- Domino Adventure — schplay / external / Puzzle
+- Purrfect Clicker — schplay / external / Simulation
+- Juicy Tic Tac Toe Battle — schplay / external / Arcade
+- HookCube — schplay / external / Arcade
+- Pull The Pin Much Money — schplay / external / Puzzle
+- Noodle Stack Runner — schplay / external / Arcade
+- Big hand — schplay / external / Arcade
+- Flappy Ship Classic — schplay / external / Arcade
+- Practice On Me — schplay / external / Arcade
+- RedPool Legend 2 Player — schplay / external / Sports
+- Noob the builder — schplay / external / Arcade
+- Balloons Park — schplay / external / Arcade
+- Stunt Maps — schplay / external / Driving
+- Shape Transform Blob Racing — schplay / external / Driving
+- Addition: Bird Image Uncover — schplay / external / Arcade
+- AnimalCraft Friends — schplay / external / Arcade
+- Bitcoin Millionaire — schplay / external / Simulation
+- Jungle Jump — schplay / external / Platformer
+- Real Savior — schplay / external / Arcade
+- Watermelon Merge 3 — schplay / external / Arcade
+- Ghost Town Escape 4 - Mirrored Dimension — schplay / external / Arcade
+- The Rabbit Adventure — schplay / external / Platformer
+- Mini Games Puzzle Collection — schplay / external / Puzzle
+- Cat Pet Doctor Dentist — schplay / external / Arcade
+- Super Doctor Body Examination — schplay / external / Arcade
+- Perfect Piano Magic — schplay / external / Arcade
+- Minescraftter Two Player — schplay / external / Arcade
+- Candy Cat Shot — schplay / external / Arcade
+- Connect Pipe! Color Puzzle Game — schplay / external / Puzzle
+- Imposter Assassin 3D — schplay / external / Arcade
+- Brick Hit — schplay / external / Arcade
+- Block Craft 3D School — schplay / external / Arcade
+- Gold Miner Tower Defense — schplay / external / Simulation
+- Z Machine — schplay / external / Arcade
+- Cake Maker Kids Cooking — schplay / external / Arcade
+- Nightmare Float — schplay / external / Horror
+- Bottle Battle — schplay / external / Puzzle
+- Memory Exclusive — schplay / external / Puzzle
+- Happy Sheepies — schplay / external / Arcade
+- Human Expenditure Program — schplay / external / Arcade
+- Milkman Karlson — schplay / external / Arcade
+- Yume Nikki — schplay / external / Arcade
+- Andy's Apple Farm — schplay / external / Arcade
+- Baldi's Basics Classic Remastered — schplay / external / Horror
+- Bergentruck — schplay / external / Arcade
+- Eggy Car — s0lace / local / Arcade
+- Obby Robby: Only Up — s0lace / local / Arcade
+- Police Pursuit — s0lace / local / Driving
+- Sandtrix — s0lace / local / Puzzle
+- Stunt Bike Extreme — s0lace / local / Driving
+- Unfair Mario — s0lace / local / Platformer
+- Voxiles — s0lace / local / Arcade
+- Music Player — s0lace / local / Tools
+- Ruffle Emulator — s0lace / local / Tools
+- RIOT Emulator — s0lace / local / Tools
+- Soundboard — s0lace / local / Tools
+- EmulatorJS — s0lace / local / Tools
+- Code Editor — s0lace / local / Tools
+
+## Validation
+
+Unique catalog IDs, all local entry/thumbnail paths, representative local launch, external launch links, search, category filters, favorites, recently played, service setup/navigation, and no overflow at 1440/768/390/320px passed. The chunked WASM reconstructs the supplied file byte-for-byte. AI and TMDB UI rendering used mock providers, including script-injection text. Proxy initialized with the real dependencies and fetched a public HTTPS example through Wisp. Production provider credentials and all imported game runtimes were not tested.

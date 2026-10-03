@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Sidequest — a compact browser game library."><title>Sidequest — Game library</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="gamer.css"><script defer src="games.js"></script><script defer src="common.js"></script><script defer src="library.js"></script><script defer src="blank.js"></script></head>
+<body><a class="skip" href="#main">Skip to games</a><header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">▦</span> SIDEQUEST<span class="brand-sub">GAMES &amp; WEB</span></a><button class="button random">⚄ <span>Random game</span></button><nav class="top-tabs" aria-label="Site"><a href="index.html" aria-current="page">Games</a><a href="web.html">Web</a><a href="chat.html">Chat</a><a href="media.html">Movies &amp; TV</a><a href="ai.html">AI</a><a href="proxy.html">Browser</a></nav><button class="button blank-button" data-open-blank>Open in about:blank</button></header>
+<div class="layout"><aside><p class="nav-label">LIBRARY</p><nav aria-label="Library"><button data-view="all" class="nav-item active">▦ <span>All games</span><span class="count" id="all-count">696</span></button><button data-view="favorites" class="nav-item">♡ <span>Favorites</span><span class="count" id="fav-count">0</span></button><button data-view="recent" class="nav-item">◷ <span>Recently played</span></button></nav></aside>
+<main id="main"><div class="page-heading"><div><h1 id="view-title">Games</h1><p id="view-description" class="muted">Search by name or browse a category.</p></div><span class="library-stamp">696 GAMES <span>IN THE LIBRARY</span></span></div>
+
+<section aria-label="Game library"><div class="library-tools"><label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search games…" aria-label="Search games"><kbd>/</kbd></label><span id="result-count" class="muted" role="status"></span></div><div class="filters" id="filters" aria-label="Categories"></div><div class="grid" id="game-grid"></div><div id="empty" class="empty" hidden><h2>No games found.</h2><p id="empty-text"></p><button id="reset" class="button">Reset filters</button></div></section>
+<footer><span>SIDEQUEST <span class="muted"></span></span><span class="muted"><a href="credits.html">Collection credits</a></span></footer></main></div><div id="toast" role="status" class="toast" hidden></div></body></html>
+
+
+
+

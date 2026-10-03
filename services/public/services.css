@@ -1,0 +1,147 @@
+.service-main {
+  max-width: 1250px;
+  margin: auto;
+}
+.top-tabs {
+  flex-wrap: wrap;
+}
+.topbar {
+  height: auto;
+  min-height: 86px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+#service-status {
+  color: var(--orange);
+  min-height: 24px;
+}
+.service-controls {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.service-controls form {
+  display: flex;
+  gap: 8px;
+}
+#ai-form textarea,
+#proxy-form input,
+.service-controls input,
+.service-controls select {
+  padding: 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font: inherit;
+}
+#ai-form textarea {
+  display: block;
+  width: 100%;
+  margin: 12px 0;
+}
+#ai-form label,
+#proxy-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+#ai-log {
+  max-height: 50vh;
+  overflow: auto;
+  border-bottom: 1px solid var(--line);
+}
+#ai-log p {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 12px;
+  background: var(--panel);
+}
+.media-card {
+  width: 100%;
+  padding: 0;
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+  border: 0;
+  cursor: pointer;
+}
+.media-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+}
+.media-card h2 {
+  font-size: 18px;
+  padding: 0 12px;
+}
+.media-card p {
+  padding: 0 12px;
+  color: var(--muted);
+}
+#media-dialog {
+  background: var(--panel);
+  color: var(--text);
+  border: 2px solid var(--violet);
+  width: min(950px, 95vw);
+  max-height: 90dvh;
+  overflow: auto;
+  padding: 20px;
+}
+#media-dialog::backdrop {
+  background: #000b;
+}
+#media-player iframe {
+  width: 100%;
+  height: 55vh;
+  border: 1px solid var(--line);
+  background: #000;
+}
+#episode-controls input {
+  width: 75px;
+  margin: 8px;
+  padding: 6px;
+}
+#proxy-form input {
+  width: min(650px, 100%);
+}
+#service-setup {
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+#service-setup .button {
+  display: inline-block;
+}
+.service-main .grid {
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+}
+@media (max-width: 700px) {
+  .top-tabs a {
+    flex: initial;
+    min-width: 90px;
+  }
+  .top-tabs {
+    justify-content: flex-start;
+  }
+  .service-main {
+    padding: 20px 14px;
+  }
+  .service-controls form {
+    width: 100%;
+  }
+  .service-controls input {
+    min-width: 0;
+    flex: 1;
+  }
+  #proxy-form .button {
+    margin-top: 10px;
+  }
+  .service-main .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .media-card h2 {
+    font-size: 15px;
+  }
+}

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Chat — Sidequest</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="gamer.css" />
+    <link rel="stylesheet" href="chat.css" />
+    <script defer src="common.js"></script>
+    <script defer src="blank.js"></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/12.19.0/firebase-auth-compat.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/12.19.0/firebase-database-compat.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/12.19.0/firebase-functions-compat.js"
+    ></script>
+    <script defer src="chat-config.js"></script>
+    <script defer src="chat.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#message-input">Skip to message</a>
+    <header class="topbar">
+      <a class="brand" href="index.html"
+        ><span class="brand-mark">▦</span> SIDEQUEST<span class="brand-sub"
+          >GAMES &amp; WEB</span
+        ></a
+      >
+      <nav class="top-tabs" aria-label="Site">
+        <a href="index.html">Games</a><a href="web.html">Web</a
+        ><a href="chat.html" aria-current="page">Chat</a>
+      <a href="media.html">Movies &amp; TV</a><a href="ai.html">AI</a><a href="proxy.html">Browser</a></nav>
+      <button class="button blank-button" data-open-blank>
+        Open in about:blank
+      </button>
+    </header>
+    <main class="native-chat">
+      <div class="chat-title">
+        <h1>Chat</h1>
+        <span id="connection" role="status">Connecting…</span
+        ><button id="mute" class="button" aria-pressed="false">
+          Mute sound</button
+        ><button id="profile-button" class="button">Your profile</button>
+      </div>
+      <p id="chat-error" class="chat-error" role="alert" hidden></p>
+      <section id="setup" hidden>
+        <h2>Chat needs Firebase setup</h2>
+        <p>
+          The chat files are ready. Connect your Firebase project to turn on
+          messages.
+        </p>
+        <p>
+          Open docs/CHAT-SETUP.md in the downloaded folder, then add your public
+          web config to chat-config.js.
+        </p>
+      </section>
+      <div id="chat-layout" class="chat-layout" hidden>
+        <aside class="chat-sidebar">
+          <nav id="rooms" aria-label="Chatrooms"></nav>
+          <h2>Online <span id="online-count">0</span></h2>
+          <ul id="online"></ul>
+          <button id="moderation-button" class="button" hidden>Reports</button>
+          <p class="muted">
+            Be decent. No spam.<br />Messages stay in the room.
+          </p>
+        </aside>
+        <section class="conversation" aria-label="Conversation">
+          <h2 id="room-title"># General</h2>
+          <button id="older" class="button" hidden>
+            Load earlier messages
+          </button>
+          <div
+            id="messages"
+            role="log"
+            aria-label="Messages"
+            aria-live="polite"
+            aria-relevant="additions"
+          ></div>
+          <p id="typing" role="status"></p>
+          <div id="reply-bar" hidden>
+            <span></span
+            ><button id="cancel-reply" aria-label="Cancel reply">×</button>
+          </div>
+          <form id="compose">
+            <label class="sr-only" for="message-input">Message</label
+            ><textarea
+              id="message-input"
+              maxlength="1000"
+              rows="2"
+              placeholder="Say something…"
+              required
+            ></textarea>
+            <div class="compose-bottom">
+              <span id="characters">0 / 1000</span
+              ><span>Enter to send · Shift+Enter for a new line</span
+              ><button id="send" class="button chat-primary" type="submit">
+                Send
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+      <dialog id="profile-dialog">
+        <form id="profile-form">
+          <h2>Your profile</h2>
+          <label
+            >Username<input
+              id="username"
+              maxlength="24"
+              minlength="1"
+              required
+              autocomplete="nickname" /></label
+          ><label
+            >Avatar<select id="avatar">
+              <option value="controller">🎮 Controller</option>
+              <option value="cat">🐱 Cat</option>
+              <option value="ghost">👻 Ghost</option>
+              <option value="robot">🤖 Robot</option>
+              <option value="star">⭐ Star</option>
+              <option value="frog">🐸 Frog</option>
+            </select></label
+          >
+          <p id="identity" class="muted"></p>
+          <button class="button chat-primary" type="submit">Save profile</button
+          ><button id="close-profile" class="button" type="button">
+            Close
+          </button>
+        </form>
+        <details>
+          <summary>Keep your identity with an account</summary>
+          <form id="account-form">
+            <label
+              >Email<input
+                id="email"
+                type="email"
+                autocomplete="email"
+                required /></label
+            ><label
+              >Password<input
+                id="password"
+                type="password"
+                minlength="8"
+                autocomplete="current-password"
+                required /></label
+            ><button class="button" name="mode" value="register">
+              Create account</button
+            ><button class="button" name="mode" value="login">Sign in</button>
+          </form>
+          <button id="reset-password" class="button">Reset password</button>
+        </details>
+        <button id="sign-out" class="button">Sign out</button>
+        <p id="profile-status" role="status"></p>
+      </dialog>
+      <dialog id="reports-dialog">
+        <h2>Reports</h2>
+        <div id="reports"></div>
+        <button id="close-reports" class="button">Close</button>
+      </dialog>
+    </main>
+    <div id="toast" role="status" class="toast" hidden></div>
+  </body>
+</html>

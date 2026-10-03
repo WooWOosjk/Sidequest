@@ -1,0 +1,10 @@
+{
+  "name": "sidequest-chat-tests",
+  "private": true,
+  "scripts": {
+    "test": "node integration.cjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.56.0"
+  }
+}

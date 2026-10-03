@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>AI — Sidequest</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="gamer.css" />
+    <link rel="stylesheet" href="services.css" />
+    <script defer src="common.js"></script>
+    <script defer src="blank.js"></script>
+    <script defer src="services-config.js"></script>
+    <script defer src="services.js"></script>
+  </head>
+  <body data-service="ai">
+    <a class="skip" href="#service-main">Skip to content</a>
+    <header class="topbar">
+      <a class="brand" href="index.html"
+        ><span class="brand-mark">▦</span> SIDEQUEST<span class="brand-sub"
+          >GAMES &amp; WEB</span
+        ></a
+      >
+      <nav class="top-tabs" aria-label="Site">
+        <a href="index.html">Games</a><a href="web.html">Web</a
+        ><a href="chat.html">Chat</a><a href="media.html">Movies &amp; TV</a
+        ><a href="ai.html" aria-current="page">AI</a
+        ><a href="proxy.html">Browser</a>
+      </nav>
+      <button class="button blank-button" data-open-blank>
+        Open in about:blank
+      </button>
+    </header>
+    <main id="service-main" class="service-main">
+      <h1>AI</h1>
+      <p id="service-status" role="status">Connecting…</p>
+      <section id="service-setup" hidden>
+        <h2>This needs the services server</h2>
+        <p>
+          Deploy the included services folder, then set its HTTPS address in
+          services-config.js. Instructions are in docs/SERVICES-SETUP.md.
+        </p>
+        <a
+          id="service-launch"
+          class="button"
+          hidden
+          target="_blank"
+          rel="noopener"
+          >Open service</a
+        >
+      </section>
+      <section id="service-content" hidden>
+        <div id="ai-log" role="log" aria-live="polite"></div>
+        <form id="ai-form">
+          <label for="ai-input">Message</label
+          ><textarea
+            id="ai-input"
+            maxlength="8000"
+            rows="4"
+            required
+            placeholder="Ask something…"
+          ></textarea
+          ><button id="ai-send" class="button">Send</button>
+        </form>
+        <p class="muted">
+          Messages are sent to Google Gemini. Replies may be wrong.
+        </p>
+      </section>
+    </main>
+    <div id="toast" role="status" class="toast" hidden></div>
+  </body>
+</html>
+

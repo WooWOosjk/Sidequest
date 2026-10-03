@@ -19,7 +19,6 @@
     message("Not connected");
   }
   if (!cfg.sameOrigin) {
-    setup();
     if (cfg.baseURL) {
       try {
         const url = new URL(cfg.baseURL);
@@ -31,17 +30,28 @@
           )
         )
           throw Error("Use an HTTPS services URL.");
+        if (url.username || url.password)
+          throw Error("Use a public services URL without credentials.");
+        url.pathname = url.pathname.replace(/\/?$/, "/");
+        url.search = "";
+        url.hash = "";
+        const target = new URL(kind + ".html", url).href;
+        if (kind === "media") {
+          if (target === location.href)
+            throw Error("The services page needs its sameOrigin configuration.");
+          location.replace(target);
+          return;
+        }
+        setup();
         const a = $("service-launch");
-        a.href = new URL(
-          kind + ".html",
-          url.href.endsWith("/") ? url.href : url.href + "/",
-        ).href;
+        a.href = target;
         a.hidden = false;
         message("Open the service to continue.");
       } catch (e) {
+        setup();
         message(e.message);
       }
-    }
+    } else setup();
     return;
   }
   $("service-content").hidden = false;

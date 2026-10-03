@@ -5,9 +5,13 @@
     cfg = window.SERVICES_CONFIG || {},
     status = $("service-status");
   if (cfg.sameOrigin && cfg.portalURL) {
+    const portal = new URL(cfg.portalURL);
+    portal.pathname = portal.pathname.replace(/\/?$/, "/");
+    portal.search = "";
+    portal.hash = "";
     for (const a of document.querySelectorAll('a[href]')) {
-      if (['index.html', 'web.html', 'chat.html', 'credits.html'].includes(a.getAttribute('href'))) {
-        a.href = new URL(a.getAttribute('href'), cfg.portalURL).href;
+      if (['index.html', 'web.html', 'chat.html', 'credits.html', 'ai.html', 'proxy.html'].includes(a.getAttribute('href'))) {
+        a.href = new URL(a.getAttribute('href'), portal).href;
       }
     }
   }

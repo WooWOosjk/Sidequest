@@ -132,7 +132,7 @@ function rate(req, kind, maximum) {
   return v.count <= maximum;
 }
 app.get("/api/status", async () => ({
-  ai: !!process.env.GEMINI_API_KEY,
+  ai: !!process.env.GROQ_API_KEY,
   media: !!process.env.TMDB_TOKEN,
   proxy: true,
 }));
@@ -141,29 +141,31 @@ app.post("/api/ai", async (req, res) => {
     return res
       .code(429)
       .send({ error: "Wait a minute before sending more messages." });
-  if (!process.env.GEMINI_API_KEY)
+  if (!process.env.GROQ_API_KEY)
     return res
       .code(503)
-      .send({ error: "AI needs GEMINI_API_KEY on the service server." });
+      .send({ error: "AI needs GROQ_API_KEY on the service server." });
   const text = req.body?.message;
   if (typeof text !== "string" || !text.trim() || text.length > 8000)
     return res
       .code(400)
       .send({ error: "Enter a message of 1–8000 characters." });
   try {
-    const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
-    if (!/^[a-zA-Z0-9.-]+$/.test(model)) throw Error("Invalid model");
+    const model = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
+    if (!/^[a-zA-Z0-9][a-zA-Z0-9._/-]{0,127}$/.test(model)) throw Error("Invalid model");
     const r = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+      "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": process.env.GEMINI_API_KEY,
+          Authorization: "Bearer " + process.env.GROQ_API_KEY,
         },
         body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: text.trim() }] }],
-          generationConfig: { maxOutputTokens: 2048 },
+          model,
+          messages: [{ role: "user", content: text.trim() }],
+          max_completion_tokens: 2048,
+          stream: false,
         }),
         signal: AbortSignal.timeout(45000),
       },
@@ -176,12 +178,11 @@ app.post("/api/ai", async (req, res) => {
             "The AI provider could not complete the request. Check the server’s key and model.",
         });
     const data = await r.json();
+    const content = data.choices?.[0]?.message?.content;
     return {
-      text:
-        (data.candidates?.[0]?.content?.parts || [])
-          .filter((p) => !p.thought)
-          .map((p) => p.text || "")
-          .join("\n") || "No response was returned.",
+      text: typeof content === "string" && content
+        ? content.replaceAll(process.env.GROQ_API_KEY, "[redacted]")
+        : "No response was returned.",
     };
   } catch {
     return res

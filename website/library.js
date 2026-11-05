@@ -3,6 +3,22 @@ let view='all', category='All';
 const grid=document.querySelector('#game-grid'),search=document.querySelector('#search');
 const categories=['All',...new Set(GAMES.map(g=>g.category))];
 categories.forEach(name=>{const b=document.createElement('button');b.className='filter';b.textContent=name==='All'?'All categories':name;b.setAttribute('aria-pressed',name===category);b.onclick=()=>{category=name;render();};b.dataset.category=name;document.querySelector('#filters').append(b);});
+function renderFeatured(){
+ const section=document.querySelector('#featured'), rail=document.querySelector('#featured-rail');
+ if(!section||!rail) return;
+ const show=view==='all'&&category==='All'&&!search.value.trim();
+ section.hidden=!show;
+ if(!show) return;
+ const picks=[];
+ for(const name of categories){ if(name==='All') continue; const game=GAMES.find(g=>g.category===name&&!g.broken); if(game) picks.push(game); }
+ rail.replaceChildren();
+ picks.forEach(g=>{
+  const card=document.createElement('a'); card.className='feature-card'; card.href=Arcade.play(g.id); card.setAttribute('aria-label','Play '+g.title);
+  const img=document.createElement('img'); img.src=g.thumbnail; img.alt=''; img.loading='lazy';
+  const body=document.createElement('div'); const title=document.createElement('h3'); title.textContent=g.title; const cat=document.createElement('p'); cat.textContent=g.category;
+  body.append(title, cat); card.append(img, body); rail.append(card);
+ });
+}
 function render(){
  const favorites=Arcade.read('favorites'),recent=Arcade.read('recent');
  let items=view==='recent'?recent.map(id=>GAMES.find(g=>g.id===id)).filter(Boolean):GAMES.filter(g=>view!=='favorites'||favorites.includes(g.id));
@@ -13,8 +29,9 @@ function render(){
  document.querySelectorAll('.filter').forEach(b=>b.setAttribute('aria-pressed',b.dataset.category===category));
  grid.replaceChildren();
  items.forEach(g=>{const card=document.createElement('article');card.className='game-card'+(g.broken?' game-unavailable':'');const media=document.createElement('a');media.href=Arcade.play(g.id);media.className='card-media';media.setAttribute('aria-label',(g.broken?'Unavailable: ':'Play ')+g.title);const img=document.createElement('img');img.src=g.thumbnail;img.alt='';img.loading='lazy';img.onerror=()=>{img.hidden=true;media.classList.add('thumbnail-error');media.textContent=g.title;};media.append(img);const badge=document.createElement('span');badge.className='demo-badge'+(g.broken?' badge-broken':'');badge.textContent=g.broken?'UNAVAILABLE':g.demo?'DEMO':g.type==='external'?'OPEN LINK':'PLAY HERE';media.append(badge);const body=document.createElement('div');body.className='card-body';const title=document.createElement('h2');title.textContent=g.title;const cat=document.createElement('p');cat.className='muted';cat.textContent=g.category;const row=document.createElement('div');row.className='card-row';const play=document.createElement('a');play.className='play-link';play.href=Arcade.play(g.id);play.textContent=g.broken?'Unavailable':'▶ Play';const fav=document.createElement('button');fav.className='favorite';fav.textContent=favorites.includes(g.id)?'♥':'♡';fav.setAttribute('aria-label','Favorite '+g.title);fav.setAttribute('aria-pressed',favorites.includes(g.id));fav.onclick=()=>{Arcade.favorite(g.id);render();};row.append(play,fav);body.append(title,cat,row);card.append(media,body);grid.append(card);});
+ renderFeatured();
  document.querySelector('#empty').hidden=items.length>0;document.querySelector('#empty-text').textContent=search.value||category!=='All'?'Try another search or category.':view==='favorites'?'Save a game with the heart button to find it here.':view==='recent'?'Play your first game and it will appear here.':'Add a game to games.js to get started.';
 }
-document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('[data-view]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-current',x===b?'page':'false');});document.querySelector('#view-title').textContent={all:'Games',favorites:'Favorites',recent:'Recently played'}[view];document.querySelector('#view-description').textContent={all:'Search by name or browse a category.',favorites:'Games you’ve saved.',recent:'Games you’ve opened recently.'}[view];render();});
+document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{view=b.dataset.view;document.querySelectorAll('[data-view]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-current',x===b?'page':'false');});document.querySelector('#view-title').textContent={all:'Games',favorites:'Favorites',recent:'Recently played'}[view];document.querySelector('#view-description').textContent={all:'Search the library, browse a category, or jump back into a favorite.',favorites:'Games you’ve saved.',recent:'Games you’ve opened recently.'}[view];render();});
 search.oninput=render;document.querySelector('#reset').onclick=()=>{search.value='';category='All';render();};document.addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();search.focus();}});window.addEventListener('storage',render);render();
 

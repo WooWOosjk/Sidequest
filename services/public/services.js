@@ -135,7 +135,9 @@
         );
         const area = $("media-player");
         area.replaceChildren();
-        $("watch-link").href = data.watch;
+        const watch = $("watch-link");
+        watch.href = data.watch;
+        watch.classList.toggle("primary", !data.embed);
         if (data.embed) {
           const iframe = node("iframe");
           iframe.src = data.embed;
@@ -188,6 +190,7 @@
           b.onclick = () => {
             current = title;
             $("media-title").textContent = title.title;
+            $("media-overview").textContent = title.overview || "No overview is available for this title.";
             $("episode-controls").hidden = title.kind !== "tv";
             $("media-dialog").showModal();
             player();

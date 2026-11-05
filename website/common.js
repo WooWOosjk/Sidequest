@@ -11,6 +11,7 @@ window.Arcade = (() => {
   let internal=false;
   document.addEventListener('click',event=>{const a=event.target.closest('a');if(a&&a.target!=='_blank'&&new URL(a.href,location.href).origin===location.origin&&!event.ctrlKey&&!event.metaKey){internal=true;setTimeout(()=>internal=false,1000);}});
   window.addEventListener('beforeunload',event=>{if(internal)return;event.preventDefault();event.returnValue='';});
-  document.querySelectorAll('.random').forEach(button=>button.addEventListener('click',()=>{const games=window.GAMES||[];if(!games.length)return toast('No games in the catalog yet.');internal=true;location.href=play(games[Math.floor(Math.random()*games.length)].id);}));
-  return {read,write,favorite,recent,play,source,toast};
+  function goRandom(exceptId){const games=window.GAMES||[];const open=games.filter(g=>!g.broken&&g.id!==exceptId);const fallback=games.filter(g=>g.id!==exceptId);const choice=open.length?open:fallback.length?fallback:games;if(!choice.length)return toast('No games in the catalog yet.');internal=true;location.href=play(choice[Math.floor(Math.random()*choice.length)].id);}
+  document.querySelectorAll('.random').forEach(button=>button.addEventListener('click',()=>goRandom()));
+  return {read,write,favorite,recent,play,source,toast,goRandom};
 })();

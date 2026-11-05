@@ -4,14 +4,16 @@
     kind = document.body.dataset.service,
     cfg = window.SERVICES_CONFIG || {},
     status = $("service-status");
+  // Games, Web, and Chat live on the static portal. AI, Movies, and Browser stay on this origin.
+  const PORTAL_PAGES = ["index.html", "web.html", "chat.html", "credits.html"];
   if (cfg.sameOrigin && cfg.portalURL) {
     const portal = new URL(cfg.portalURL);
     portal.pathname = portal.pathname.replace(/\/?$/, "/");
     portal.search = "";
     portal.hash = "";
-    for (const a of document.querySelectorAll('a[href]')) {
-      if (['index.html', 'web.html', 'chat.html', 'credits.html', 'ai.html', 'proxy.html'].includes(a.getAttribute('href'))) {
-        a.href = new URL(a.getAttribute('href'), portal).href;
+    for (const a of document.querySelectorAll("a[href]")) {
+      if (PORTAL_PAGES.includes(a.getAttribute("href"))) {
+        a.href = new URL(a.getAttribute("href"), portal).href;
       }
     }
   }
@@ -22,8 +24,21 @@
     $("service-setup").hidden = false;
     message("Not connected");
   }
+  function explainProxy() {
+    if (kind !== "proxy") return;
+    const title = $("service-setup-title");
+    const copy = $("service-setup-copy");
+    if (title) title.textContent = "Browser requires the operator password";
+    if (copy)
+      copy.textContent =
+        "Browser is the private proxy on the services host. Continue only if you have the operator username and password. Your browser will ask for them. This page does not store or send the password, and the server still rejects a missing or wrong sign-in. Games, Movies, and AI stay open without it.";
+    const button = $("service-launch");
+    if (button) {
+      button.textContent = "Continue to Browser";
+      button.removeAttribute("target");
+    }
+  }
   if (!cfg.sameOrigin) {
-    setup();
     if (cfg.baseURL) {
       try {
         const url = new URL(cfg.baseURL);
@@ -35,16 +50,26 @@
           )
         )
           throw Error("Use an HTTPS services URL.");
+        if (url.username || url.password)
+          throw Error("Use a public services URL without credentials.");
+        url.pathname = url.pathname.replace(/\/?$/, "/");
+        url.search = "";
+        url.hash = "";
+        const target = new URL(kind + ".html", url).href;
+        setup();
+        explainProxy();
         const a = $("service-launch");
-        a.href = new URL(
-          kind + ".html",
-          url.href.endsWith("/") ? url.href : url.href + "/",
-        ).href;
+        a.href = target;
         a.hidden = false;
-        message("Open the service to continue.");
+        message(kind === "proxy" ? "The next step asks for the operator password." : "Open the service to continue.");
       } catch (e) {
+        setup();
+        explainProxy();
         message(e.message);
       }
+    } else {
+      setup();
+      explainProxy();
     }
     return;
   }
@@ -110,7 +135,9 @@
         );
         const area = $("media-player");
         area.replaceChildren();
-        $("watch-link").href = data.watch;
+        const watch = $("watch-link");
+        watch.href = data.watch;
+        watch.classList.toggle("primary", !data.embed);
         if (data.embed) {
           const iframe = node("iframe");
           iframe.src = data.embed;
@@ -163,6 +190,7 @@
           b.onclick = () => {
             current = title;
             $("media-title").textContent = title.title;
+            $("media-overview").textContent = title.overview || "No overview is available for this title.";
             $("episode-controls").hidden = title.kind !== "tv";
             $("media-dialog").showModal();
             player();

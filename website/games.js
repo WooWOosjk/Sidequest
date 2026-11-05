@@ -11,7 +11,9 @@ window.GAMES = [
     "controls": "See in-game instructions",
     "license": "Supplied collection · See credits and original game notices",
     "permission": "Imported based on the user’s stated creator permission; underlying game rights not independently verified",
-    "collection": true
+    "collection": true,
+    "broken": true,
+    "brokenReason": "Its jsDelivr loader WebGL.loader.js returned 404, so this port never starts."
   },
   {
     "id": "collection-1-trombone-champ",
@@ -414,7 +416,9 @@ window.GAMES = [
     "controls": "See in-game instructions",
     "license": "Supplied collection · See credits and original game notices",
     "permission": "Imported based on the user’s stated creator permission; underlying game rights not independently verified",
-    "collection": true
+    "collection": true,
+    "broken": true,
+    "brokenReason": "The launch file is only a missing-file notice, not a playable game."
   },
   {
     "id": "collection-32-bad-piggies",
@@ -2273,7 +2277,9 @@ window.GAMES = [
     "controls": "See in-game instructions",
     "license": "Supplied collection · See credits and original game notices",
     "permission": "Imported based on the user’s stated creator permission; underlying game rights not independently verified",
-    "collection": true
+    "collection": true,
+    "broken": true,
+    "brokenReason": "Its jsDelivr loader returned 403, so the game cannot start."
   },
   {
     "id": "collection-175-fnf-rewrite",
@@ -3300,7 +3306,9 @@ window.GAMES = [
     "controls": "See in-game instructions",
     "license": "Supplied collection · See credits and original game notices",
     "permission": "Imported based on the user’s stated creator permission; underlying game rights not independently verified",
-    "collection": true
+    "collection": true,
+    "broken": true,
+    "brokenReason": "Its jsDelivr loader returned 403, so the game cannot start."
   },
   {
     "id": "collection-254-big-shot-boxing",
@@ -3846,7 +3854,9 @@ window.GAMES = [
     "controls": "See in-game instructions",
     "license": "Supplied collection · See credits and original game notices",
     "permission": "Imported based on the user’s stated creator permission; underlying game rights not independently verified",
-    "collection": true
+    "collection": true,
+    "broken": true,
+    "brokenReason": "Its jsDelivr loader returned 403, so the game cannot start."
   },
   {
     "id": "collection-296-death-run-3d",
@@ -4275,7 +4285,9 @@ window.GAMES = [
     "controls": "See in-game instructions",
     "license": "Supplied collection · See credits and original game notices",
     "permission": "Imported based on the user’s stated creator permission; underlying game rights not independently verified",
-    "collection": true
+    "collection": true,
+    "broken": true,
+    "brokenReason": "Its jsDelivr loader returned 403, so the game cannot start."
   },
   {
     "id": "collection-329-super-falling-fred",
@@ -4483,7 +4495,9 @@ window.GAMES = [
     "controls": "See in-game instructions",
     "license": "Supplied collection · See credits and original game notices",
     "permission": "Imported based on the user’s stated creator permission; underlying game rights not independently verified",
-    "collection": true
+    "collection": true,
+    "broken": true,
+    "brokenReason": "The launch file is only a missing-file notice, not a playable game."
   },
   {
     "id": "collection-345-fruit-ninja",
@@ -4522,7 +4536,9 @@ window.GAMES = [
     "controls": "See in-game instructions",
     "license": "Supplied collection · See credits and original game notices",
     "permission": "Imported based on the user’s stated creator permission; underlying game rights not independently verified",
-    "collection": true
+    "collection": true,
+    "broken": true,
+    "brokenReason": "Its jsDelivr loader returned 403, so the game cannot start."
   },
   {
     "id": "collection-348-recoil",

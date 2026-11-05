@@ -69,6 +69,12 @@
         <div id="media-results" class="grid"></div>
         <dialog id="media-dialog">
           <h2 id="media-title"></h2>
+          <p id="media-overview"></p>
+          <div class="media-actions">
+            <a id="watch-link" target="_blank" rel="noopener" class="button primary"
+              >Where to watch</a
+            ><button id="close-media" class="button">Close</button>
+          </div>
           <label id="episode-controls" hidden
             >Season
             <input id="season" type="number" min="1" max="9999" value="1" />
@@ -84,9 +90,6 @@
             </button></label
           >
           <div id="media-player"></div>
-          <a id="watch-link" target="_blank" rel="noopener" class="button"
-            >Where to watch</a
-          ><button id="close-media" class="button">Close</button>
         </dialog>
         
       </section>

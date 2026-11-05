@@ -12,7 +12,7 @@
   padding-bottom: 12px;
 }
 #service-status {
-  color: var(--orange);
+  color: var(--silver);
   min-height: 24px;
 }
 .service-controls {
@@ -80,10 +80,20 @@
   padding: 0 12px;
   color: var(--muted);
 }
+#media-overview {
+  color: var(--muted);
+  white-space: pre-wrap;
+}
+.media-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 14px;
+}
 #media-dialog {
   background: var(--panel);
   color: var(--text);
-  border: 2px solid var(--violet);
+  border: 1px solid var(--line-strong);
   width: min(950px, 95vw);
   max-height: 90dvh;
   overflow: auto;

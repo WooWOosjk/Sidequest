@@ -31,3 +31,11 @@ Below 1100px the site tabs wrap onto their own full-width row on every page that
 ### Checks
 
 `node --test tests/catalog-nav.test.mjs` covers the portal link list, the Browser copy, the eight marked games, and launch-file detection. `node --test tests/portal-ui.test.mjs` checks tab fit at 1440, 768, and 390 and the OvO and PEAK failed states in headless Chrome. `npm test` in `services/` is unchanged and still covers auth and rate limits.
+
+## 2026-11-05 — Silver and black hub
+
+The purple and green arcade skin is replaced by one silver-and-black design system in `website/styles.css`. `gamer.css`, `chat.css`, and `services.css` use those tokens, and the same files are copied into `services/public/`.
+
+The library keeps search, categories, favorites, recently played, all 696 games, and the Unavailable badges. A featured row shows one working game from each category. Movies show the overview and put the TMDB “Where to watch” link first when no embed is configured.
+
+Security controls, rate limits, and environment variables were not changed. The reference for layout was Noah’s Tutoring Hub (`https://www.noahstutoring.academy/`): a dark hub with persistent navigation, a prominent search, and a game grid. Its name, logo, copy, and assets were not copied. The accent here is brushed silver, not that site’s orange.
